@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estados Neurodivergentes</title>
+    <link rel="stylesheet" type="text/css" href="exercicio5.1b.css">
+
+</head>
+<body>
+
+    <div class="container">
+        <!-- Esquerda: Listbox com as siglas -->
+        <div class="painel-esquerdo">
+            <!-- CORREÇÃO: Adicionado o label vinculado ao id do select para acessibilidade -->
+            <label for="selectNeurodivergentes">PSICO:</label>
+            <select id="selectNeurodivergentes" size="2">
+                <option value="0" selected>HIPERATIVO</option>
+                <option value="1">TDAH</option>
+                <option value="2">DISLEXIA</option>
+                <option value="3">AUTISMO</option>
+                <option value="4">ANSIEDADE</option>
+            </select>
+        </div>
+
+        <!-- Meio: Botão -->
+        <div class="painel-meio" style="display: flex; flex-direction: column; width: fit-content; gap: 1px;">
+            <button id="btnSintomas">INFOS</button>
+            <br>
+            <!-- CORREÇÃO: Ajustado o texto de 'Jason' para 'JSON' nos botões -->
+            <button id="btnExportarJSON">Exportar JSON</button>
+            <br>
+            <button id="btnImportarJSON">Importar JSON</button>
+        </div>
+
+        <!-- Direita: Quatro divs/quadros de informações -->
+        <div class="painel-direito">
+            <div class="card-info">
+                <strong>Sintomas</strong>
+                <div id="divSintomas">-</div>
+            </div>
+            <div class="card-info">
+                <strong>Medicação</strong>
+                <div id="divMedicacao">-</div>
+            </div>
+            <div class="card-info">
+                <strong>Comportamento</strong>
+                <div id="divComportamento">-</div>
+            </div>
+           
+        </div>
+    </div>
+
+
+</body>
+</html>

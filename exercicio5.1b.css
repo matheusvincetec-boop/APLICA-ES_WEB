@@ -1,0 +1,85 @@
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #01010a;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            background-color: #c9f8c4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Lado Esquerdo - Listbox */
+        .painel-esquerdo select {
+            width: 150px;
+            height: 180px;
+            padding: 20px;
+            font-size: 16px;
+            border: 1px solid #0b0c09;
+            border-radius: 4px;
+        }
+
+        /* Meio - Botão */
+        .painel-meio button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #025216;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .painel-meio button:hover {
+            background-color: #277cd7;
+        }
+
+        /* Lado Direito - Quadro Divs */
+        .painel-direito {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 250px;
+        }
+
+        .card-info {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .card-info strong {
+            display: block;
+            color: #555;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .card-info div {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .card-info img {
+            max-width: 80px;
+            height: auto;
+            border: 1px solid #ccc;
+        }

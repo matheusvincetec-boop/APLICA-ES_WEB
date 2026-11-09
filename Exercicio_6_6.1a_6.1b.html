@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercício 6.1 - Controle de Estoque</title>
+    <script>
+        // Simulando o carregamento do estoque.json
+        let estoque = [
+            { "id": 1, "nome": "Caneta", "qtd": 10, "preco": 1.50 },
+            { "id": 2, "nome": "Caderno", "qtd": 5, "preco": 15.00 },
+            { "id": 3, "nome": "Borracha", "qtd": 8, "preco": 0.80 }
+        ];
+
+        function listarEstoque() {
+            let tabela = document.getElementById("tabelaEstoque");
+            tabela.innerHTML = `
+                <tr>
+                    <th>ID</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                </tr>
+            `;
+            estoque.forEach(p => {
+                tabela.innerHTML += `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.nome}</td>
+                        <td><input type="number" id="qtd_${p.id}" value="${p.qtd}" min="0"></td>
+                        <td>R$ ${p.preco.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Exercício 6.1.a - Incluir novo produto
+        function incluirProduto() {
+            let nome = document.getElementById("novoNome").value.trim();
+            let qtd = parseInt(document.getElementById("novaQtd").value);
+            let preco = parseFloat(document.getElementById("novoPreco").value);
+
+            if (!nome || isNaN(qtd) || isNaN(preco)) {
+                alert("Por favor, preencha todos os campos corretamente!");
+                return;
+            }
+
+            // Gera um novo ID baseado no maior ID existente
+            let novoId = estoque.length > 0 ? Math.max(...estoque.map(p => p.id)) + 1 : 1;
+
+            let novoProduto = {
+                id: novoId,
+                nome: nome,
+                qtd: qtd,
+                preco: preco
+            };
+
+            estoque.push(novoProduto);
+            listarEstoque();
+
+            // Limpa os campos de input
+            document.getElementById("novoNome").value = "";
+            document.getElementById("novaQtd").value = "";
+            document.getElementById("novoPreco").value = "";
+        }
+
+        // Exercício 6.1.b - Atualizar as quantidades na memória (array)
+        function atualizarEstoque() {
+            estoque.forEach(p => {
+                let inputQtd = document.getElementById(`qtd_${p.id}`);
+                if (inputQtd) {
+                    p.qtd = parseInt(inputQtd.value) || 0;
+                }
+            });
+            alert("Quantidades atualizadas na memória!");
+            listarEstoque();
+        }
+
+        // Exercício 6.1.b - "Salvar" o JSON simulado (Download do arquivo)
+        function salvarEstoque() {
+            // Atualiza antes de salvar para garantir que os dados estão frescos
+            atualizarEstoque();
+
+            let jsonString = JSON.stringify(estoque, null, 4);
+            let blob = new Blob([jsonString], { type: "application/json" });
+            let url = URL.createObjectURL(blob);
+
+            // Cria um link temporário para download do estoque.json atualizado
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "estoque.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        window.onload = listarEstoque;
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; margin-bottom: 20px; width: 50%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        input[type="number"] { width: 60px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group input { margin-right: 10px; padding: 5px; }
+        button { padding: 6px 12px; cursor: pointer; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>Controle de Estoque</h2>
+
+    <table id="tabelaEstoque"></table>
+
+    <button onclick="atualizarEstoque()">Atualizar Estoque</button>
+    <button onclick="salvarEstoque()">Salvar Estoque (JSON)</button>
+
+    <hr>
+
+    <h3>Incluir Novo Produto</h3>
+    <div class="form-group">
+        <input type="text" id="novoNome" placeholder="Nome do Produto">
+        <input type="number" id="novaQtd" placeholder="Qtd Inicial" min="0">
+        <input type="number" id="novoPreco" placeholder="Preço (ex: 2.50)" step="0.01" min="0">
+        <button onclick="incluirProduto()">Incluir Produto</button>
+    </div>
+
+</body>
+</html>

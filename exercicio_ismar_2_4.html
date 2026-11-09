@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora Multi-Funções</title>
+<style>
+body{font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f4f4f9}
+.container{display:flex;align-items:center;gap:12px;background:#fff;padding:24px;border-radius:12px;box-shadow:0 4px 12px #0002}
+input{width:90px;padding:10px;font-size:18px;text-align:center;border:2px solid #ccc;border-radius:8px;outline:0}
+input:focus{border-color:#07f}input[readonly]{background:#e9ecef;color:#495057}
+.coluna-botoes{display:flex;flex-direction:column;align-items:center;gap:6px}
+button{border:0;border-radius:6px;cursor:pointer;font-weight:bold;transition:.2s}
+button:hover{transform:scale(1.4);filter:brightness(.9)}button:active{transform:scale(.95)}
+.btn-op{width:60px;padding:6px 0;font-size:16px;color:#fff}
+.soma{background:#e83e8c}.subtracao{background:#fd7e14}.multiplicacao{background:#23634e}.divisao{background:#17a2b8}
+.porcentagem{width:70px;padding:8px 0;font-size:18px;background:#39ff14;color:#000}
+.especial{width:60px;padding:6px 0;font-size:20px;background:#6c757d;color:#fff}
+.combinacao{width:60px;padding:6px 0;font-size:18px;background:#20c997;color:#fff}
+.igual{font-size:28px;padding:6px 16px;background:#07f;color:#fff}
+</style>
+</head>
+<body>
+<div class="container">
+<input type="number" id="valor1" value="10" step="1" min="0">
+<div class="coluna-botoes">
+<button class="btn-op soma" onclick="calcular('soma')">+</button>
+<button class="btn-op subtracao" onclick="calcular('subtracao')">-</button>
+<button class="porcentagem" onclick="calcular('porcentagem')">%</button>
+<button class="btn-op multiplicacao" onclick="calcular('multiplicacao')">×</button>
+<button class="btn-op divisao" onclick="calcular('divisao')">÷</button>
+<button class="especial" onclick="calcular('somatorio')">Σ</button>
+<button class="especial" onclick="calcular('produtorio')">Π</button>
+<button class="combinacao" onclick="calcular('combinacao')">C</button>
+</div>
+<input type="number" id="valor2" value="3" step="1" min="0">
+<button class="igual" onclick="calcular()">=</button>
+<input type="number" id="resultado" readonly>
+</div>
+
+<script>
+let ultimaOperacao='combinacao';
+
+const fatorial=n=>{
+ let r=1;
+ for(let i=2;i<=n;i++)r*=i;
+ return r;
+};
+
+function calcular(op){
+ if(op)ultimaOperacao=op;
+ const n=parseInt(valor1.value),k=parseInt(valor2.value);
+ if(isNaN(n)||isNaN(k))return resultado.value='';
+
+ let r;
+ switch(ultimaOperacao){
+  case'soma':r=n+k;break;
+  case'subtracao':r=n-k;break;
+  case'multiplicacao':r=n*k;break;
+  case'divisao':
+   if(!k)return alert('Erro: divisão por zero não é permitida.'),resultado.value='';
+   r=n/k;break;
+  case'porcentagem':r=n*k/100;break;
+  case'somatorio':
+   r=0;for(let i=Math.min(n,k);i<=Math.max(n,k);i++)r+=i;
+   break;
+  case'produtorio':
+   r=1;for(let i=Math.min(n,k);i<=Math.max(n,k);i++)r*=i;
+   break;
+  case'combinacao':
+   if(n<0||k<0||k>n)return alert('Para combinação, use n ≥ k ≥ 0.'),resultado.value='';
+   r=fatorial(n)/(fatorial(k)*fatorial(n-k));break;
+  default:return;
+ }
+ resultado.value=Number.isFinite(r)?Number.isInteger(r)?r:parseFloat(r.toFixed(2)):'Muito grande';
+}
+
+valor1.oninput=valor2.oninput=()=>calcular();
+calcular();
+</script>
+</body>
+</html>
+
+

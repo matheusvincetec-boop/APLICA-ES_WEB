@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Média com Validação</title>
+</head>
+<body>
+
+    <!-- 1. Interface HTML -->
+    <h2>Calculadora de Média</h2>
+    
+    <label for="nota1">Nota 1:</label>
+    <input type="number" id="nota1" min="0" max="10" step="0.1" placeholder="Ex: 7.5">
+    
+    <br><br>
+    
+    <label for="nota2">Nota 2:</label>
+    <input type="number" id="nota2" min="0" max="10" step="0.1" placeholder="Ex: 6.8">
+    
+    <br><br>
+    
+    <button onclick="processarMedia()">Calcular Média</button>
+    
+    <!-- Div para exibir o resultado final -->
+    <div id="resultadoCalculo"></div>
+
+    <script>
+        // 2. Função modular que calcula e retorna a média aritmética
+        function calcularMedia(n1, n2) {
+            return (n1 + n2) / 2;
+        }
+
+        // 3. Função principal disparada pelo clique do botão
+        function processarMedia() {
+            // Captura os valores dos campos e converte explicitamente para número
+            const valor1 = Number(document.getElementById("nota1").value);
+            const valor2 = Number(document.getElementById("nota2").value);
+            
+            // Referência do elemento onde o resultado será exibido
+            const elementoResultado = document.getElementById("resultadoCalculo");
+
+            // Validação simples para garantir que os campos foram preenchidos
+            if (document.getElementById("nota1").value === "" || document.getElementById("nota2").value === "") {
+                elementoResultado.innerText = "Por favor, preencha ambas as notas.";
+                elementoResultado.style.color = "black";
+                return;
+            }
+
+            // Chama a função passando as notas convertidas e armazena o retorno
+            const mediaFinal = calcularMedia(valor1, valor2);
+
+            // Formata a média para exibir sempre com uma casa decimal (ex: 7.0)
+            const mediaFormatada = mediaFinal.toFixed(1);
+
+            // Verifica o status e altera o conteúdo e a cor do texto dinamicamente
+            if (mediaFinal >= 7.0) {
+                elementoResultado.innerText = `Média: ${mediaFormatada} - Aprovado`;
+                elementoResultado.style.color = "green";
+            } else {
+                elementoResultado.innerText = `Média: ${mediaFormatada} - Recuperação`;
+                elementoResultado.style.color = "red";
+            }
+        }
+    </script>
+
+</body>
+</html>

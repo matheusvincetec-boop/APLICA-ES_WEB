@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Multi-Funções</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="number"] {
+      width: 90px;
+      padding: 10px;
+      font-size: 18px;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: #007bff;
+    }
+
+    input[readonly] {
+      background-color: #e9ecef;
+      color: #495057;
+      border-color: #ced4da;
+      cursor: not-allowed;
+    }
+
+    /* Coluna central para alinhar os botões verticalmente */
+    .coluna-botoes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Estilo base comum para os botões de operação */
+    .btn-op {
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      width: 60px;
+      padding: 6px 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-op:hover {
+      filter: brightness(0.9);
+      transform: scale(1.05);
+    }
+
+    .btn-op:active {
+      transform: scale(0.95);
+    }
+
+    /* Cores variadas para os novos botões */
+    .btn-soma { background-color: #e83e8c; }          /* Rosa */
+    .btn-subtracao { background-color: #fd7e14; }     /* Laranja */
+    .btn-multiplicacao { background-color: #6f42c1; } /* Roxo */
+    .btn-divisao { background-color: #17a2b8; }       /* Ciano */
+
+    /* Botão personalizado em Verde Fluorescente mantido no centro */
+    .btn-porcentagem {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000000;
+      background-color: #39FF14;
+      border: none;
+      border-radius: 6px;
+      width: 70px;
+      padding: 8px 0;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(57, 255, 20, 0.5);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .btn-porcentagem:hover {
+      background-color: #2eff00;
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+      transform: scale(1.05);
+    }
+
+    .btn-igual {
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-igual:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Campo 1: Primeiro número -->
+    <input type="number" id="valor1" value="20" step="any">
+    
+    <!-- Bloco central com botões empilhados (Acima e Abaixo do Verde) -->
+    <div class="coluna-botoes">
+      <button class="btn-op btn-soma" onclick="calcular('soma')">+</button>
+      <button class="btn-op btn-subtracao" onclick="calcular('subtracao')">-</button>
+      
+      <!-- Botão verde fluorescente no centro do agrupamento -->
+      <button class="btn-porcentagem" onclick="calcular('porcentagem')">%</button>
+      
+      <button class="btn-op btn-multiplicacao" onclick="calcular('multiplicacao')">×</button>
+      <button class="btn-op btn-divisao" onclick="calcular('divisao')">÷</button>
+    </div>
+    
+    <!-- Campo 2: Segundo número -->
+    <input type="number" id="valor2" value="50" step="any">
+    
+    <!-- Botão de igual (executa a última operação selecionada ou porcentagem por padrão) -->
+    <button class="btn-igual" onclick="executarUltimaOperacao()">=</button>
+    
+    <!-- Campo 3: Resultado bloqueado -->
+    <input type="number" id="resultado" value="10" readonly>
+  </div>
+
+  <script>
+    // Armazena a última operação clicada para o botão de igual usar
+    let ultimaOperacao = 'porcentagem';
+
+    function calcular(operacao) {
+      if (operacao) {
+        ultimaOperacao = operacao;
+      }
+
+      const n1 = parseFloat(document.getElementById('valor1').value);
+      const n2 = parseFloat(document.getElementById('valor2').value);
+      const displayResultado = document.getElementById('resultado');
+
+      if (isNaN(n1) || isNaN(n2)) {
+        displayResultado.value = "";
+        return;
+      }
+
+      let resultadoFinal = 0;
+
+      // Executa a lógica matemática baseada na operação selecionada
+      switch (ultimaOperacao) {
+        case 'soma':
+          resultadoFinal = n1 + n2;
+          break;
+        case 'subtracao':
+          resultadoFinal = n1 - n2;
+          break;
+        case 'multiplicacao':
+          resultadoFinal = n1 * n2;
+          break;
+        case 'divisao':
+          if (n2 === 0) {
+            displayResultado.value = "";
+            alert("Erro: Divisão por zero não é permitida.");
+            return;
+          }
+          resultadoFinal = n1 / n2;
+          break;
+        case 'porcentagem':
+          resultadoFinal = (n1 / 100) * n2;
+          break;
+        default:
+          return;
+      }
+
+      // Exibe o resultado formatado com até 2 casas decimais
+      displayResultado.value = parseFloat(resultadoFinal.toFixed(2));
+    }
+
+    function executarUltimaOperacao() {
+      calcular(ultimaOperacao);
+    }
+
+    // Atualiza automaticamente o cálculo quando o usuário digita nos inputs
+    document.getElementById('valor1').addEventListener('input', () => calcular());
+    document.getElementById('valor2').addEventListener('input', () => calcular());
+  </script>
+
+</body>
+</html>

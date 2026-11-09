@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Saudação Personalizada</title>
+</head>
+<body>
+
+     <input type="text" id="campoNome" placeholder="Coloque o nominho aqui">
+    <button onclick="executarSaudacao()">Saudar</button>
+    <p id="mensagem"></p>
+
+    <script>
+        // 2. Função que constrói a string de saudação e retorna o valor
+        function construirSaudacao(nome) {
+            return "Aeeee, " + nome + "! Seja bem-vinde, a nossa Loucura Diária!";
+        }
+
+        // 3. Função principal disparada pelo evento onclick do botão
+        function executarSaudacao() {
+            // Obtém o elemento de entrada e o valor digitado
+            const inputNome = document.getElementById("campoNome");
+            const nomeDigitado = inputNome.value;
+
+            // Validação simples: evita saudar se o campo estiver vazio
+            if (nomeDigitado.trim() === "") {
+                document.getElementById("mensagem").innerText = "Por favor, digite um nome válido.";
+                return;
+            }
+
+            // Chama a função de construção passando o nome e armazena o retorno
+            const saudacaoFinal = construirSaudacao(nomeDigitado);
+
+            // Exibe o texto retornado dentro do parágrafo #mensagem
+            document.getElementById("mensagem").innerText = saudacaoFinal;
+        }
+    </script>
+
+</body>
+</html>
+    
+

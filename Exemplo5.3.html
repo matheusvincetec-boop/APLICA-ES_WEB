@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estados do Sudeste do Brasil (JSON)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Lado Esquerdo - Listbox */
+        .painel-esquerdo select {
+            width: 120px;
+            height: 220px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Meio - Botões */
+        .painel-meio {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .painel-meio button {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #btnDetalhes {
+            background-color: #007bff;
+        }
+
+        #btnDetalhes:hover {
+            background-color: #0056b3;
+        }
+
+        #btnAbrirModal {
+            background-color: #28a745;
+        }
+
+        #btnAbrirModal:hover {
+            background-color: #218838;
+        }
+
+        #btnBaixarJson {
+            background-color: #17a2b8;
+        }
+
+        #btnBaixarJson:hover {
+            background-color: #117a8b;
+        }
+
+        #btnCarregarJson {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        #btnCarregarJson:hover {
+            background-color: #e0a800;
+        }
+
+        /* Lado Direito - Quadro Divs */
+        .painel-direito {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 250px;
+        }
+
+        .card-info {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .card-info strong {
+            display: block;
+            color: #555;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .card-info div {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .card-info img {
+            width: 100px;
+            height: 65px;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        /* Estilo do Modal (Janela de Formulário) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 320px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .modal-acoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .modal-acoes button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-salvar {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-cancelar {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Esquerda: Listbox com as siglas -->
+        <div class="painel-esquerdo">
+            <select id="selectEstados" size="5"></select>
+        </div>
+
+        <!-- Meio: Botões -->
+        <div class="painel-meio">
+            <button id="btnDetalhes">Detalhes</button>
+            <button id="btnAbrirModal">Novo Estado</button>
+            <button id="btnBaixarJson">Exportar JSON</button>
+            <button id="btnCarregarJson">Importar JSON</button>
+            <input type="file" id="fileInputJson" accept=".json" style="display: none;">
+        </div>
+
+        <!-- Direita: Quatro divs/quadros de informações -->
+        <div class="painel-direito">
+            <div class="card-info">
+                <strong>Capital</strong>
+                <div id="divCapital">-</div>
+            </div>
+            <div class="card-info">
+                <strong>Área</strong>
+                <div id="divArea">-</div>
+            </div>
+            <div class="card-info">
+                <strong>População</strong>
+                <div id="divPopulacao">-</div>
+            </div>
+            <div class="card-info">
+                <strong>Bandeira</strong>
+                <div id="divBandeira">-</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Formulário -->
+    <div class="modal-overlay" id="modalForm">
+        <div class="modal-content">
+            <h3>Cadastrar Novo Estado</h3>
+            <div class="form-group">
+                <label for="inputSigla">Sigla/Nome do Estado:</label>
+                <input type="text" id="inputSigla" placeholder="Ex: PR">
+            </div>
+            <div class="form-group">
+                <label for="inputCapital">Capital:</label>
+                <input type="text" id="inputCapital" placeholder="Ex: Curitiba">
+            </div>
+            <div class="form-group">
+                <label for="inputArea">Área:</label>
+                <input type="text" id="inputArea" placeholder="Ex: 199.307,922 km²">
+            </div>
+            <div class="form-group">
+                <label for="inputPopulacao">População:</label>
+                <input type="text" id="inputPopulacao" placeholder="Ex: 11.516.840 hab.">
+            </div>
+            <div class="form-group">
+                <label for="inputBandeira">URL da Bandeira:</label>
+                <input type="url" id="inputBandeira" placeholder="https://exemplo.com/bandeira.svg">
+            </div>
+            <div class="modal-acoes">
+                <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                <button type="button" class="btn-salvar" id="btnSalvar">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Estado {
+            constructor(sigla, capital, area, populacao, bandeira) {
+                this.sigla = sigla;
+                this.capital = capital;
+                this.area = area;
+                this.populacao = populacao;
+                this.bandeira = bandeira;
+            }
+        }
+
+        let listaEstados = [];
+
+        // Mapeamento dos elementos da DOM
+        const selectEstados  = document.getElementById("selectEstados");
+        const btnDetalhes    = document.getElementById("btnDetalhes");
+        const btnAbrirModal  = document.getElementById("btnAbrirModal");
+        const btnCancelar    = document.getElementById("btnCancelar");
+        const btnSalvar      = document.getElementById("btnSalvar");
+        const btnBaixarJson  = document.getElementById("btnBaixarJson");
+        const btnCarregarJson= document.getElementById("btnCarregarJson");
+        const fileInputJson  = document.getElementById("fileInputJson");
+        const modalForm      = document.getElementById("modalForm");
+
+        const divCapital     = document.getElementById("divCapital");
+        const divArea        = document.getElementById("divArea");
+        const divPopulacao   = document.getElementById("divPopulacao");
+        const divBandeira    = document.getElementById("divBandeira");
+
+        // --- CARREGAMENTO EXCLUSIVO VIA JSON (SEM HARDCODED) ---
+        async function carregarDadosJSON() {
+            const dadosSalvos = localStorage.getItem("estados_json");
+
+            if (dadosSalvos) {
+                // Instancia objetos a partir da cache local
+                const objetos = JSON.parse(dadosSalvos);
+                listaEstados = objetos.map(obj => new Estado(obj.sigla, obj.capital, obj.area, obj.populacao, obj.bandeira));
+                atualizarListbox();
+            } else {
+                try {
+                    // Requisita a leitura do arquivo externo 'estados.json'
+                    const resposta = await fetch("estados.json");
+                    if (!resposta.ok) throw new Error("Erro ao carregar estados.json");
+                    
+                    const dadosJson = await resposta.json();
+                    listaEstados = dadosJson.map(obj => new Estado(obj.sigla, obj.capital, obj.area, obj.populacao, obj.bandeira));
+                    
+                    atualizarListbox();
+                    escreverDadosJSON();
+                } catch (e) {
+                    console.error("Falha ao ler dados iniciais do arquivo JSON:", e);
+                    alert("Não foi possível carregar o arquivo 'estados.json'. Certifique-se de estar rodando em um servidor local (ex: Live Server).");
+                }
+            }
+        }
+
+        function escreverDadosJSON() {
+            const jsonString = JSON.stringify(listaEstados, null, 2);
+            localStorage.setItem("estados_json", jsonString);
+        }
+
+        function atualizarListbox() {
+            selectEstados.innerHTML = "";
+            listaEstados.forEach((estado, index) => {
+                const opcao = document.createElement("option");
+                opcao.value = index;
+                opcao.textContent = estado.sigla;
+                if (index === 0) opcao.selected = true;
+                selectEstados.appendChild(opcao);
+            });
+        }
+
+        // --- EVENTOS ---
+        btnDetalhes.addEventListener("click", function() {
+            const index = selectEstados.value;
+            if (index !== null && index !== "" && listaEstados[index]) {
+                const estadoSelecionado = listaEstados[index];
+                divCapital.textContent = estadoSelecionado.capital;
+                divArea.textContent = estadoSelecionado.area;
+                divPopulacao.textContent = estadoSelecionado.populacao;
+                divBandeira.innerHTML = `<img src="${estadoSelecionado.bandeira}" alt="Bandeira de ${estadoSelecionado.sigla}">`;
+            }
+        });
+
+        btnAbrirModal.addEventListener("click", () => modalForm.style.display = "flex");
+        btnCancelar.addEventListener("click", () => {
+            modalForm.style.display = "none";
+            limparFormulario();
+        });
+
+        btnSalvar.addEventListener("click", function() {
+            const sigla = document.getElementById("inputSigla").value.trim();
+            const capital = document.getElementById("inputCapital").value.trim();
+            const area = document.getElementById("inputArea").value.trim();
+            const populacao = document.getElementById("inputPopulacao").value.trim();
+            const bandeira = document.getElementById("inputBandeira").value.trim();
+
+            if (!sigla || !capital || !area || !populacao || !bandeira) {
+                alert("Por favor, preencha todos os campos!");
+                return;
+            }
+
+            const novoEstado = new Estado(sigla, capital, area, populacao, bandeira);
+            listaEstados.push(novoEstado);
+
+            escreverDadosJSON();
+            atualizarListbox();
+            selectEstados.value = listaEstados.length - 1;
+
+            modalForm.style.display = "none";
+            limparFormulario();
+        });
+
+        // Exportar/Sobrescrever arquivo JSON via FileSystem Access API
+        btnBaixarJson.addEventListener("click", async function() {
+            const jsonString = JSON.stringify(listaEstados, null, 2);
+
+            if ('showSaveFilePicker' in window) {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: 'estados.json',
+                        types: [{ description: 'Arquivo JSON', accept: { 'application/json': ['.json'] } }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(jsonString);
+                    await writable.close();
+                } catch (err) {
+                    if (err.name !== 'AbortError') console.error(err);
+                }
+            } else {
+                const blob = new Blob([jsonString], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "estados.json";
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        });
+
+        // Importação de arquivo JSON externo pelo usuário
+        btnCarregarJson.addEventListener("click", () => fileInputJson.click());
+
+        fileInputJson.addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evento) {
+                try {
+                    const dadosLidos = JSON.parse(evento.target.result);
+                    listaEstados = dadosLidos.map(obj => new Estado(obj.sigla, obj.capital, obj.area, obj.populacao, obj.bandeira));
+                    escreverDadosJSON();
+                    atualizarListbox();
+                } catch (err) {
+                    alert("Erro ao ler a estrutura do arquivo JSON.");
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function limparFormulario() {
+            document.getElementById("inputSigla").value = "";
+            document.getElementById("inputCapital").value = "";
+            document.getElementById("inputArea").value = "";
+            document.getElementById("inputPopulacao").value = "";
+            document.getElementById("inputBandeira").value = "";
+        }
+
+        // Executa a leitura inicial exclusivamente via arquivo JSON
+        carregarDadosJSON();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Multi-Funções</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="number"] {
+      width: 90px;
+      padding: 10px;
+      font-size: 18px;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: #007bff;
+    }
+
+    input[readonly] {
+      background-color: #e9ecef;
+      color: #495057;
+      border-color: #ced4da;
+      cursor: not-allowed;
+    }
+
+    /* Coluna central */
+    .coluna-botoes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Botões normais */
+    .btn-op {
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      width: 60px;
+      padding: 6px 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-op:hover {
+      filter: brightness(0.9);
+      transform: scale(1.05);
+    }
+
+    .btn-op:active {
+      transform: scale(0.95);
+    }
+
+    .btn-soma {
+      background-color: #e83e8c;
+    }
+
+    .btn-subtracao {
+      background-color: #fd7e14;
+    }
+
+    .btn-multiplicacao {
+      background-color: #6f42c1;
+    }
+
+    .btn-divisao {
+      background-color: #17a2b8;
+    }
+
+    /* Botão potência */
+    .btn-potencia {
+      background-color: #fd5c63;
+    }
+
+    /* Botão porcentagem */
+    .btn-porcentagem {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000000;
+      background-color: #39FF14;
+      border: none;
+      border-radius: 6px;
+      width: 70px;
+      padding: 8px 0;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(57, 255, 20, 0.5);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .btn-porcentagem:hover {
+      background-color: #2eff00;
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+      transform: scale(1.05);
+    }
+
+    /* Botões Σ e Π */
+    .btn-especial {
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      background-color: #6c757d;
+      border: none;
+      border-radius: 6px;
+      width: 60px;
+      padding: 6px 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-especial:hover {
+      background-color: #495057;
+      transform: scale(1.05);
+    }
+
+    .btn-especial:active {
+      transform: scale(0.95);
+    }
+
+    /* Botão igual */
+    .btn-igual {
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-igual:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Primeiro número (Base) -->
+    <input
+      type="number"
+      id="valor1"
+      value="2"
+      step="1"
+    >
+
+    <!-- Botões -->
+    <div class="coluna-botoes">
+
+      <button
+        class="btn-op btn-soma"
+        onclick="calcular('soma')">
+        +
+      </button>
+
+      <button
+        class="btn-op btn-subtracao"
+        onclick="calcular('subtracao')">
+        -
+      </button>
+
+      <button
+        class="btn-porcentagem"
+        onclick="calcular('porcentagem')">
+        %
+      </button>
+
+      <button
+        class="btn-op btn-multiplicacao"
+        onclick="calcular('multiplicacao')">
+        ×
+      </button>
+
+      <button
+        class="btn-op btn-divisao"
+        onclick="calcular('divisao')">
+        ÷
+      </button>
+
+      <!-- Novo Botão de Potência -->
+      <button
+        class="btn-op btn-potencia"
+        onclick="calcular('potencia')">
+        ^
+      </button>
+
+      <!-- BOTÕES ESPECIAIS -->
+      <button
+        class="btn-especial"
+        onclick="calcular('somatorio')">
+        Σ
+      </button>
+
+      <button
+        class="btn-especial"
+        onclick="calcular('produtorio')">
+        Π
+      </button>
+
+    </div>
+
+    <!-- Segundo número (Expoente) -->
+    <input
+      type="number"
+      id="valor2"
+      value="3"
+      step="1"
+    >
+
+    <!-- Igual -->
+    <button
+      class="btn-igual"
+      onclick="executarUltimaOperacao()">
+      =
+    </button>
+
+    <!-- Resultado -->
+    <input
+      type="number"
+      id="resultado"
+      value=""
+      readonly
+    >
+
+  </div>
+
+  <script>
+
+    // Guarda a última operação selecionada
+    let ultimaOperacao = 'potencia';
+
+
+    function calcular(operacao) {
+
+      if (operacao) {
+        ultimaOperacao = operacao;
+      }
+
+      // Lê os mesmos campos id="valor1" e id="valor2" das outras variáveis
+      const n1 = parseFloat(
+        document.getElementById('valor1').value
+      );
+
+      const n2 = parseFloat(
+        document.getElementById('valor2').value
+      );
+
+      const displayResultado =
+        document.getElementById('resultado');
+
+
+      // Verifica se os valores são números
+      if (isNaN(n1) || isNaN(n2)) {
+        displayResultado.value = "";
+        return;
+      }
+
+
+      let resultadoFinal = 0;
+
+
+      switch (ultimaOperacao) {
+
+        // Soma normal
+        case 'soma':
+
+          resultadoFinal = n1 + n2;
+
+          break;
+
+
+        // Subtração
+        case 'subtracao':
+
+          resultadoFinal = n1 - n2;
+
+          break;
+
+
+        // Multiplicação
+        case 'multiplicacao':
+
+          resultadoFinal = n1 * n2;
+
+          break;
+
+
+        // Divisão
+        case 'divisao':
+
+          if (n2 === 0) {
+
+            displayResultado.value = "";
+
+            alert(
+              "Erro: Divisão por zero não é permitida."
+            );
+
+            return;
+          }
+
+          resultadoFinal = n1 / n2;
+
+          break;
+
+
+        // Porcentagem
+        case 'porcentagem':
+
+          resultadoFinal = (n1 / 100) * n2;
+
+          break;
+
+
+        // Potência (n1 elevado a n2)
+        case 'potencia':
+
+          resultadoFinal = n1 ** n2;
+
+          break;
+
+
+        // ============================
+        // SOMATÓRIO Σ
+        // ============================
+        case 'somatorio':
+
+          let inicio = Math.ceil(n1);
+          let fim = Math.floor(n2);
+
+          resultadoFinal = 0;
+
+          if (inicio > fim) {
+
+            [inicio, fim] = [fim, inicio];
+
+          }
+
+          for (let i = inicio; i <= fim; i++) {
+
+            resultadoFinal += i;
+
+          }
+
+          break;
+
+
+        // ============================
+        // PRODUTÓRIO Π
+        // ============================
+        case 'produtorio':
+
+          let inicioP = Math.ceil(n1);
+          let fimP = Math.floor(n2);
+
+          if (inicioP > fimP) {
+
+            [inicioP, fimP] = [fimP, inicioP];
+
+          }
+
+          resultadoFinal = 1;
+
+          for (
+            let i = inicioP;
+            i <= fimP;
+            i++
+          ) {
+
+            resultadoFinal *= i;
+
+          }
+
+          break;
+
+
+        default:
+
+          return;
+      }
+
+
+      // Exibe resultado
+      displayResultado.value =
+        Number.isFinite(resultadoFinal)
+          ? parseFloat(resultadoFinal.toFixed(2))
+          : "Muito grande";
+
+    }
+
+
+    // Botão =
+    function executarUltimaOperacao() {
+
+      calcular(ultimaOperacao);
+
+    }
+
+
+    // Atualiza automaticamente ao digitar
+    document
+      .getElementById('valor1')
+      .addEventListener(
+        'input',
+        () => calcular()
+      );
+
+
+    document
+      .getElementById('valor2')
+      .addEventListener(
+        'input',
+        () => calcular()
+      );
+
+    // Executa o cálculo inicial ao abrir a página (2³ = 8)
+    calcular();
+
+  </script>
+
+</body>
+</html>

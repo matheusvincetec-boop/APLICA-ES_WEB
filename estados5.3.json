@@ -1,0 +1,30 @@
+[
+  {
+    "sigla": "ES",
+    "capital": "Vitória",
+    "area": "46.074,447 km²",
+    "populacao": "3.833.712 hab.",
+    "bandeira": "https://upload.wikimedia.org/wikipedia/commons/4/43/Bandeira_do_Esp%C3%ADrito_Santo.svg"
+  },
+  {
+    "sigla": "MG",
+    "capital": "Belo Horizonte",
+    "area": "586.521,121 km²",
+    "populacao": "20.538.718 hab.",
+    "bandeira": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Bandeira_de_Minas_Gerais.svg"
+  },
+  {
+    "sigla": "RJ",
+    "capital": "Rio de Janeiro",
+    "area": "43.750,423 km²",
+    "populacao": "16.054.524 hab.",
+    "bandeira": "https://upload.wikimedia.org/wikipedia/commons/7/73/Bandeira_do_estado_do_Rio_de_Janeiro.svg"
+  },
+  {
+    "sigla": "SP",
+    "capital": "São Paulo",
+    "area": "248.219,481 km²",
+    "populacao": "44.411.238 hab.",
+    "bandeira": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Bandeira_do_estado_de_S%C3%A3o_Paulo.svg"
+  }
+]

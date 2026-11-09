@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício 3.5 - Filtro e Busca em Tempo Real</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 2px solid #007bff;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            padding: 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        li:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Filtro de Tecnologias</h2>
+    
+    <!-- 2. Campo de busca no topo da página -->
+    <input type="text" id="campoBusca" class="search-box" placeholder="Buscar tecnologia...">
+
+    <!-- 1. Lista estática com as 6 tecnologias pré-definidas -->
+    <ul id="listaTecnologias">
+        <li>JavaScript</li>
+        <li>Python</li>
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>PHP</li>
+        <li>Java</li>
+    </ul>
+</div>
+
+<script>
+    // Seleção dos elementos do DOM
+    const campoBusca = document.getElementById('campoBusca');
+    
+    // 3. Associando o evento oninput ao campo de busca
+    campoBusca.addEventListener('input', function() {
+        // 4.a Capturando o termo buscado e convertendo para minúsculas
+        const termoBuscado = campoBusca.value.toLowerCase();
+        
+        // 4.b Obtendo todos os elementos <li> da lista
+        const itensTecnologia = document.querySelectorAll('#listaTecnologias li');
+
+        // 4.c Percorrendo cada <li> com um laço de repetição
+        itensTecnologia.forEach(function(item) {
+            // Convertendo o texto do item atual para minúsculas para uma comparação justa
+            const textoTecnologia = item.textContent.toLowerCase();
+
+            // Verificando se o texto do item contém o termo buscado (.includes())
+            if (textoTecnologia.includes(termoBuscado)) {
+                // 4.d Mantém visível se houver correspondência
+                item.style.display = 'block';
+            } else {
+                // 4.e Oculta o elemento se não corresponder
+                item.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
